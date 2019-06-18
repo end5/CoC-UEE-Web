@@ -1,0 +1,19 @@
+/img
+/test
+/dist
+/includes
+/node_modules
+/res
+/assets
+
+# visual studio code configuration files
+/.vscode
+
+# osx misc files
+**/.DS_Store
+**/.AppleDouble
+**/.LSOverride
+
+# osx thumbnails
+**/._*
+
