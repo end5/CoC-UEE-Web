@@ -1,48 +1,44 @@
-	/**
-	 * Container class for the players underbody
-	 * @since December 31, 2016
-	 * @author Stadler76
-	 */
-	export class UnderBody 
-	{
-		public static  NONE: number       =   0;
-		public static  REPTILE: number    =   1;
-		public static  DRAGON: number     =   2; // Deprecated. Changed to 1 (UnderBody.REPTILE) upon loading a savegame
-		public static  FURRY: number      =   3;
-		public static  NAGA: number       =   4;
-		public static  WOOL: number       =   5; // Deprecated. Changed to 3 (UnderBody.FURRY) upon loading a savegame
-		public static  COCKATRICE: number =   6;
+import { Skin } from "./Skin";
 
-		public  type: number = NONE;
-		public  skin:Skin = new Skin();
+/**
+ * Container class for the players underbody
+ * @since December 31, 2016
+ * @author Stadler76
+ */
+export class UnderBody {
+    public static NONE: number = 0;
+    public static REPTILE: number = 1;
+    public static DRAGON: number = 2; // Deprecated. Changed to 1 (UnderBody.REPTILE) upon loading a savegame
+    public static FURRY: number = 3;
+    public static NAGA: number = 4;
+    public static WOOL: number = 5; // Deprecated. Changed to 3 (UnderBody.FURRY) upon loading a savegame
+    public static COCKATRICE: number = 6;
 
-		public  skinDescription(...args): string { return skin.description.apply(undefined, args); }
-		public  skinFurScales(...args): string { return skin.skinFurScales.apply(undefined, args); }
+    public type: number = UnderBody.NONE;
+    public skin: Skin = new Skin();
 
-		public  restore(keepTone: boolean = true): void
-		{
-			type  = NONE;
-			skin.restore(keepTone);
-		}
+    public skinDescription(...args: any): string { return this.skin.description.apply(undefined, args); }
+    public skinFurScales(...args: any): string { return this.skin.skinFurScales.apply(undefined, args); }
 
-		public  setProps(p: Record<string, any>): void
-		{
-			if (p.hasOwnProperty('type')) type = p.type;
-			if (p.hasOwnProperty('skin')) skin.setProps(p.skin);
-		}
+    public restore(keepTone: boolean = true): void {
+        type = UnderBody.NONE;
+        this.skin.restore(keepTone);
+    }
 
-		public  setAllProps(p: Record<string, any>, keepTone: boolean = true): void
-		{
-			restore(keepTone);
-			setProps(p);
-		}
+    public setProps(p: Record<string, any>): void {
+        if (p.hasOwnProperty('type')) type = p.type;
+        if (p.hasOwnProperty('skin')) this.skin.setProps(p.skin);
+    }
 
-		public  toObject(): Record<string, any>
-		{
-			return {
-				type: type,
-				skin: skin.toObject()
-			};
-		}
-	}
+    public setAllProps(p: Record<string, any>, keepTone: boolean = true): void {
+        this.restore(keepTone);
+        this.setProps(p);
+    }
 
+    public toObject(): Record<string, any> {
+        return {
+            type,
+            skin: this.skin.toObject()
+        };
+    }
+}
