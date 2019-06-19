@@ -1,35 +1,37 @@
+import { RandomDrop } from "./RandomDrop";
+import { CoC_Settings } from "../CoC_Settings";
+
 /**
  * Created by aimozg on 11.01.14.
  */
 
-	export class ChainedDrop implements RandomDrop
-	{
-		private  items: any[] = [];
-		private  probs: any[] = [];
-		private  defaultItem: any;
-		public  ChainedDrop(defaultItem: any = undefined)
-		{
-			this.defaultItem = defaultItem;
-		}
-		public  add(item: any,prob: number):ChainedDrop{
-			if (prob<0 || prob>1){
-				CoC_Settings.error("Invalid probability value "+prob);
-			}
-			items.push(item);
-			probs.push(prob);
-			return this;
-		}
-		public  elseDrop(item: any):ChainedDrop{
-			this.defaultItem = item;
-			return this;
-		}
+export class ChainedDrop<T> implements RandomDrop<T> {
+    private items: T[] = [];
+    private probs: number[] = [];
+    private defaultItem: T | undefined;
 
-		public  roll(): any
-		{
-			for (var i: number = 0; i<items.length; i++){
-				if (Math.random()<probs[i]) return items[i];
-			}
-			return defaultItem;
-		}
-	}
+    public constructor(defaultItem?: T) {
+        this.defaultItem = defaultItem;
+    }
 
+    public add(item: T, prob: number) {
+        if (prob < 0 || prob > 1) {
+            CoC_Settings.error("Invalid probability value " + prob);
+        }
+        this.items.push(item);
+        this.probs.push(prob);
+        return this;
+    }
+
+    public elseDrop(item: T) {
+        this.defaultItem = item;
+        return this;
+    }
+
+    public roll() {
+        for (let i: number = 0; i < this.items.length; i++) {
+            if (Math.random() < this.probs[i]) return this.items[i];
+        }
+        return this.defaultItem;
+    }
+}
