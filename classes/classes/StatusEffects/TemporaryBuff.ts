@@ -1,4 +1,6 @@
-
+import { StatusEffect } from "../StatusEffect";
+import { LoggerFactory } from "../internals/LoggerFactory";
+import { StatusEffectType } from "../StatusEffectType";
 
 /**
  * Common superclass for temporary stat [de]buffs with complete recovery after time.
@@ -10,76 +12,75 @@
  *
  * Using host.dynStats instead of buffHost makes the effect permanent
  */
-export class TemporaryBuff extends StatusEffect{
-	private static  LOGGER:ILogger = LoggerFactory.getLogger(TemporaryBuff);
-	private  stat1: string;
-	private  stat2: string;
-	private  stat3: string;
-	private  stat4: string;
-	public  TemporaryBuff(stype:StatusEffectType, stat1: string, stat2: string ='', stat3: string ='', stat4: string ='') {
-		super(stype);
-		this.stat1 = stat1;
-		this.stat2 = stat2;
-		this.stat3 = stat3;
-		this.stat4 = stat4;
-	}
-	/**
-	 * This function does a host.dynStats(...args) and stores the buff in status effect values
-	 */
-	protected  buffHost(...args): any {
-	var  buff: any = host.dynStats.apply(host,args);
-		if (stat1) value1 += buff[stat1];
-		if (stat2) value2 += buff[stat2];
-		if (stat3) value3 += buff[stat3];
-		if (stat4) value4 += buff[stat4];
-		LOGGER.debug("buffHost("+args.join(",")+"): " +
-					 stat1+" "+(stat1?buff[stat1]:"")+" "+
-					 stat2+" "+(stat2?buff[stat2]:"")+" "+
-					 stat3+" "+(stat3?buff[stat3]:"")+" "+
-					 stat4+" "+(stat4?buff[stat4]:"")+" "+
-					 "->("+value1+", "+value2+", "+value3+", "+value4+")");
-		return buff;
-	}
-	protected  restore(): void {
-	var  dsargs: any[] = ['scale',false];
-		if (stat1) dsargs.push(stat1,-value1);
-		if (stat2) dsargs.push(stat2,-value2);
-		if (stat3) dsargs.push(stat3,-value3);
-		if (stat4) dsargs.push(stat4,-value4);
-	var  debuff: any = host.dynStats.apply(host,dsargs);
-		if (stat1) value1 += debuff[stat1];
-		if (stat2) value2 += debuff[stat2];
-		if (stat3) value3 += debuff[stat3];
-		if (stat4) value4 += debuff[stat4];
-		LOGGER.debug("restore("+dsargs.join(",")+"): " +
-					 stat1+" "+(stat1?debuff[stat1]:"")+" "+
-					 stat2+" "+(stat2?debuff[stat2]:"")+" "+
-					 stat3+" "+(stat3?debuff[stat3]:"")+" "+
-					 stat4+" "+(stat4?debuff[stat4]:"")+" "+
-					 "->("+value1+", "+value2+", "+value3+", "+value4+")");
-	}
-	public  buffValue(stat: string): number {
-		switch (stat) {
-			case stat1:return value1;
-			case stat2:return value2;
-			case stat3:return value3;
-			case stat4:return value4;
-			default: return 0;
-		}
-	}
-	protected  apply(firstTime: boolean): void {
-	}
-	public  onAttach(): void {
-		super.onAttach();
-		apply(true);
-	}
-	public  increase(): void {
-		if (host == undefined) return;
-		apply(false);
-	}
-	public  onRemove(): void {
-		super.onRemove();
-		restore();
-	}
+export class TemporaryBuff extends StatusEffect {
+    private static LOGGER: ILogger = LoggerFactory.getLogger(TemporaryBuff);
+    private stat1: string;
+    private stat2: string;
+    private stat3: string;
+    private stat4: string;
+    public constructor(stype: StatusEffectType, stat1: string, stat2: string = '', stat3: string = '', stat4: string = '') {
+        super(stype);
+        this.stat1 = stat1;
+        this.stat2 = stat2;
+        this.stat3 = stat3;
+        this.stat4 = stat4;
+    }
+    /**
+     * This function does a host.dynStats(...args) and stores the buff in status effect values
+     */
+    protected buffHost(...args: any[]): any {
+        const buff: any = this.host.dynStats.apply(this.host, args);
+        if (this.stat1) this.value1 += buff[this.stat1];
+        if (this.stat2) this.value2 += buff[this.stat2];
+        if (this.stat3) this.value3 += buff[this.stat3];
+        if (this.stat4) this.value4 += buff[this.stat4];
+        TemporaryBuff.LOGGER.debug("buffHost(" + args.join(",") + "): " +
+            this.stat1 + " " + (this.stat1 ? buff[this.stat1] : "") + " " +
+            this.stat2 + " " + (this.stat2 ? buff[this.stat2] : "") + " " +
+            this.stat3 + " " + (this.stat3 ? buff[this.stat3] : "") + " " +
+            this.stat4 + " " + (this.stat4 ? buff[this.stat4] : "") + " " +
+            "->(" + this.value1 + ", " + this.value2 + ", " + this.value3 + ", " + this.value4 + ")");
+        return buff;
+    }
+    protected restore(): void {
+        const dsargs: any[] = ['scale', false];
+        if (this.stat1) dsargs.push(this.stat1, -this.value1);
+        if (this.stat2) dsargs.push(this.stat2, -this.value2);
+        if (this.stat3) dsargs.push(this.stat3, -this.value3);
+        if (this.stat4) dsargs.push(this.stat4, -this.value4);
+        const debuff: any = this.host.dynStats.apply(this.host, dsargs);
+        if (this.stat1) this.value1 += debuff[this.stat1];
+        if (this.stat2) this.value2 += debuff[this.stat2];
+        if (this.stat3) this.value3 += debuff[this.stat3];
+        if (this.stat4) this.value4 += debuff[this.stat4];
+        TemporaryBuff.LOGGER.debug("restore(" + dsargs.join(",") + "): " +
+            this.stat1 + " " + (this.stat1 ? debuff[this.stat1] : "") + " " +
+            this.stat2 + " " + (this.stat2 ? debuff[this.stat2] : "") + " " +
+            this.stat3 + " " + (this.stat3 ? debuff[this.stat3] : "") + " " +
+            this.stat4 + " " + (this.stat4 ? debuff[this.stat4] : "") + " " +
+            "->(" + this.value1 + ", " + this.value2 + ", " + this.value3 + ", " + this.value4 + ")");
+    }
+    public buffValue(stat: string): number {
+        switch (stat) {
+            case this.stat1: return this.value1;
+            case this.stat2: return this.value2;
+            case this.stat3: return this.value3;
+            case this.stat4: return this.value4;
+            default: return 0;
+        }
+    }
+    protected apply(firstTime: boolean): void {
+    }
+    public onAttach(): void {
+        super.onAttach();
+        this.apply(true);
+    }
+    public increase(): void {
+        if (this.host == undefined) return;
+        this.apply(false);
+    }
+    public onRemove(): void {
+        super.onRemove();
+        this.restore();
+    }
 }
-

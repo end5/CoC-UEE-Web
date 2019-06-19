@@ -1,17 +1,17 @@
+import { StatusEffect } from "../StatusEffect";
+import { StatusEffectType } from "../StatusEffectType";
+
 /**
  * Created by aimozg on 31.01.14.
  */
 
-export class CombatStatusEffect extends StatusEffect
-{
+export class CombatStatusEffect extends StatusEffect {
 
-	public  CombatStatusEffect(stype:StatusEffectType)
-	{
-		super(stype);
-	}
+    public constructor(stype: StatusEffectType) {
+        super(stype);
+    }
 
-	public  onCombatEnd(): void {
-		remove();
-	}
+    public onCombatEnd(): void {
+        this.remove();
+    }
 }
-
