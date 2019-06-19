@@ -1,13 +1,12 @@
-	
-	export class Nothing extends Shield
-	{
-		public  Nothing()
-		{
-			this.weightCategory = Shield.WEIGHT_LIGHT;
-			super("noshild", "noshield", "nothing", "nothing", 0, 0, "no shield", "shield");
-		}
-		
-		public  playerRemove():Shield {
-			return undefined; //There is nothing!
-		}
-	}
+import { Shield } from "../Shield";
+
+export class Nothing extends Shield {
+    public constructor() {
+        super("noshild", "noshield", "nothing", "nothing", 0, 0, "no shield", "shield");
+        this.weightCategory = Shield.WEIGHT_LIGHT;
+    }
+
+    public playerRemove() {
+        return undefined; // There is nothing!
+    }
+}

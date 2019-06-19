@@ -1,188 +1,181 @@
+import { Consumable } from "../Consumable";
+import { ConsumableLib } from "../ConsumableLib";
+import { kGAMECLASS } from "../../GlobalFlags/kGAMECLASS";
 
-	export class HairDye extends Consumable 
-	{
-		private  _color: string;
-		
-		public  HairDye(id: string, color: string) 
-		{
-			_color = color.toLowerCase();
-		var  shortName: string = color + " Dye";
-		var  longName: string = "a vial of " + _color + " hair dye";
-		var  value: number = ConsumableLib.DEFAULT_VALUE;
-			if (color == "rainbow") value = 100;
-		var  description: string = "This bottle of dye will allow you to change the color of your hair.  Of course if you don't have hair, using this would be a waste.";
-			super(id, shortName, longName, value, description);
-		}
-		
-		public  canUse(): boolean {
-			return true;
-		}
-		
-		public  useItem(): boolean {
-			clearOutput();
-			kGAMECLASS.output.menu();
-			 
-			if (game.player.hair.length > 0) {
-				outputText("You have " + game.player.hair.color + " hair.");
-				if (game.player.hair.color != _color) kGAMECLASS.output.addButton(0, "Hair", dyeHair);
-				else kGAMECLASS.output.addButtonDisabled(0, "Hair", "Your already have " + game.player.hair.color + " hair!");
-			} else {
-				outputText("You have no hair.");
-				kGAMECLASS.output.addButtonDisabled(0, "Hair", "You are bald!");
-			}
-			
-			if (game.player.hasFur()) {
-				outputText("\n\nYou have " + game.player.skin.furColor + " fur.");
-				if (game.player.skin.furColor != _color) kGAMECLASS.output.addButton(1, "Fur", dyeFur);
-				else kGAMECLASS.output.addButtonDisabled(1, "Fur", "Your already have " + _color + " fur!");
-			} else if (game.player.hasFeathers() || game.player.hasCockatriceSkin()) {
-				outputText("\n\nYou have " + game.player.skin.furColor + " feathers.");
-				if (game.player.skin.furColor != _color) kGAMECLASS.output.addButton(1, "Feathers", dyeFeathers);
-				else kGAMECLASS.output.addButtonDisabled(1, "Feathers", "Your already have " + _color + " feathers!");
-			} else {
-				outputText("\n\nYou have no fur.");
-				kGAMECLASS.output.addButtonDisabled(1, "Fur", "You have no fur!");
-			}
+export class HairDye extends Consumable {
+    private _color: string;
 
-			if (game.player.hasFurryUnderBody()) {
-				outputText("\n\nYou have " + game.player.underBody.skin.furColor + " fur on your underbody.");
-				if (game.player.underBody.skin.furColor != _color) kGAMECLASS.output.addButton(2, "Under Fur", dyeUnderBodyFur);
-				else kGAMECLASS.output.addButtonDisabled(2, "Under Fur", "Your already have " + _color + " fur on your underbody!");
-			} else if (game.player.hasFeatheredUnderBody()) {
-				outputText("\n\nYou have " + game.player.underBody.skin.furColor + " feathers on your underbody.");
-				if (game.player.underBody.skin.furColor != _color) kGAMECLASS.output.addButton(2, "Under Feathers", dyeUnderBodyFeathers);
-				else kGAMECLASS.output.addButtonDisabled(2, "Under Feathers", "Your already have " + _color + " feathers on your underbody!");
-			} else {
-				outputText("\n\nYou have no special or furry underbody.");
-				kGAMECLASS.output.addButtonDisabled(2, "Under Fur", "You have no special or furry underbody!");
-			}
+    public constructor(id: string, color: string) {
+        const shortName: string = color + " Dye";
+        const longName: string = "a vial of " + color + " hair dye";
+        let value: number = ConsumableLib.DEFAULT_VALUE;
+        if (color == "rainbow") value = 100;
+        const description: string = "This bottle of dye will allow you to change the color of your hair.  Of course if you don't have hair, using this would be a waste.";
+        super(id, shortName, longName, value, description);
+        this._color = color.toLowerCase();
+    }
 
-			if (game.player.wings.canDye()) {
-				outputText("\n\nYou have [wingColor] wings.");
-				if (!game.player.wings.hasDyeColor(_color)) kGAMECLASS.output.addButton(3, "Wings", dyeWings);
-				else kGAMECLASS.output.addButtonDisabled(3, "Wings", "Your already have " + _color + " wings!");
-			} else {
-				outputText("\n\nYour wings can't be dyed.");
-				kGAMECLASS.output.addButtonDisabled(3, "Wings", "Your wings can't be dyed!");
-			}
+    public canUse(): boolean {
+        return true;
+    }
 
-			if (game.player.neck.canDye()) {
-				outputText("\n\nYou have a [neckColor] neck.");
-				if (!game.player.neck.hasDyeColor(_color)) kGAMECLASS.output.addButton(5, "Neck", dyeNeck);
-				else kGAMECLASS.output.addButtonDisabled(5, "Neck", "Your already have a " + _color + " neck!");
-			} else {
-				outputText("\n\nYour neck can't be dyed.");
-				kGAMECLASS.output.addButtonDisabled(5, "Neck", "Your neck can't be dyed!");
-			}
+    public useItem(): boolean {
+        this.clearOutput();
+        kGAMECLASS.output.menu();
 
-			if (game.player.rearBody.canDye()) {
-				outputText("\n\nYou have a [rearBodyColor] rear body.");
-				if (!game.player.rearBody.hasDyeColor(_color)) kGAMECLASS.output.addButton(6, "Rear Body", dyeRearBody);
-				else kGAMECLASS.output.addButtonDisabled(6, "Rear Body", "Your already have a " + _color + " rear body!");
-			} else {
-				outputText("\n\nYour rear body can't be dyed.");
-				kGAMECLASS.output.addButtonDisabled(6, "Rear Body", "Your rear body can't be dyed!");
-			}
+        if (this.game.player.hair.length > 0) {
+            this.outputText("You have " + this.game.player.hair.color + " hair.");
+            if (this.game.player.hair.color != this._color) kGAMECLASS.output.addButton(0, "Hair", this.dyeHair);
+            else kGAMECLASS.output.addButtonDisabled(0, "Hair", "Your already have " + this.game.player.hair.color + " hair!");
+        } else {
+            this.outputText("You have no hair.");
+            kGAMECLASS.output.addButtonDisabled(0, "Hair", "You are bald!");
+        }
 
-			kGAMECLASS.output.addButton(4, "Nevermind", dyeCancel);
-			return true;
-		}
-		
-		private  dyeHair(): void {
-			clearOutput();
-			if (game.player.hair.length == 0) {
-				outputText("You rub the dye into your bald head, but it has no effect.");
-			}
-			else if (game.player.hair.color.indexOf("rubbery") != -1 || game.player.hair.color.indexOf("latex-textured") != -1) {
-				outputText("You massage the dye into your " + game.player.hairDescript() + " but the dye cannot penetrate the impermeable material your hair is composed of.");
-			}
-			else {
-				outputText("You rub the dye into your " + game.player.hairDescript() + ", then use a bucket of cool lakewater to rinse clean a few minutes later.  ");
-				game.player.hair.color = _color;
-				outputText("You now have " + game.player.hairDescript() + ".");
-				if (game.player.lust100 > 50) {
-					outputText("\n\nThe cool water calms your urges somewhat, letting you think more clearly.");
-					game.dynStats("lus", -15);
-				}
-			}
-			game.inventory.itemGoNext();
-		}
-		
-		private  dyeFur(): void {
-			clearOutput();
-			outputText("You rub the dye into your fur, then use a bucket of cool lakewater to rinse clean a few minutes later.  ");
-			game.player.skin.furColor = _color;
-			outputText("You now have " + game.player.skin.furColor + " fur.");
-			finalize();
-		}
-		
-		private  dyeUnderBodyFur(): void
-		{
-			clearOutput();
-			outputText("You rub the dye into your fur on your underside, then use a bucket of cool lakewater to rinse clean a few minutes later.  ");
-			game.player.underBody.skin.furColor = _color;
-			outputText("You now have " + game.player.underBody.skin.furColor + " fur on your underside.");
-			finalize();
-		}
+        if (this.game.player.hasFur()) {
+            this.outputText("\n\nYou have " + this.game.player.skin.furColor + " fur.");
+            if (this.game.player.skin.furColor != this._color) kGAMECLASS.output.addButton(1, "Fur", this.dyeFur);
+            else kGAMECLASS.output.addButtonDisabled(1, "Fur", "Your already have " + this._color + " fur!");
+        } else if (this.game.player.hasFeathers() || this.game.player.hasCockatriceSkin()) {
+            this.outputText("\n\nYou have " + this.game.player.skin.furColor + " feathers.");
+            if (this.game.player.skin.furColor != this._color) kGAMECLASS.output.addButton(1, "Feathers", this.dyeFeathers);
+            else kGAMECLASS.output.addButtonDisabled(1, "Feathers", "Your already have " + this._color + " feathers!");
+        } else {
+            this.outputText("\n\nYou have no fur.");
+            kGAMECLASS.output.addButtonDisabled(1, "Fur", "You have no fur!");
+        }
 
-		private  dyeFeathers(): void
-		{
-			clearOutput();
-			outputText("You rub the dye into your feathers, then use a bucket of cool lakewater to rinse clean a few minutes later.  ");
-			game.player.skin.furColor = _color;
-			outputText("You now have " + game.player.skin.furColor + " feathers.");
-			finalize();
-		}
+        if (this.game.player.hasFurryUnderBody()) {
+            this.outputText("\n\nYou have " + this.game.player.underBody.skin.furColor + " fur on your underbody.");
+            if (this.game.player.underBody.skin.furColor != this._color) kGAMECLASS.output.addButton(2, "Under Fur", this.dyeUnderBodyFur);
+            else kGAMECLASS.output.addButtonDisabled(2, "Under Fur", "Your already have " + this._color + " fur on your underbody!");
+        } else if (this.game.player.hasFeatheredUnderBody()) {
+            this.outputText("\n\nYou have " + this.game.player.underBody.skin.furColor + " feathers on your underbody.");
+            if (this.game.player.underBody.skin.furColor != this._color) kGAMECLASS.output.addButton(2, "Under Feathers", this.dyeUnderBodyFeathers);
+            else kGAMECLASS.output.addButtonDisabled(2, "Under Feathers", "Your already have " + this._color + " feathers on your underbody!");
+        } else {
+            this.outputText("\n\nYou have no special or furry underbody.");
+            kGAMECLASS.output.addButtonDisabled(2, "Under Fur", "You have no special or furry underbody!");
+        }
 
-		private  dyeUnderBodyFeathers(): void
-		{
-			clearOutput();
-			outputText("You rub the dye into your feathers on your underside, then use a bucket of cool lakewater to rinse clean a few minutes later.  ");
-			game.player.underBody.skin.furColor = _color;
-			outputText("You now have " + game.player.underBody.skin.furColor + " feathers on your underside.");
-			finalize();
-		}
+        if (this.game.player.wings.canDye()) {
+            this.outputText("\n\nYou have [wingColor] wings.");
+            if (!this.game.player.wings.hasDyeColor(this._color)) kGAMECLASS.output.addButton(3, "Wings", this.dyeWings);
+            else kGAMECLASS.output.addButtonDisabled(3, "Wings", "Your already have " + this._color + " wings!");
+        } else {
+            this.outputText("\n\nYour wings can't be dyed.");
+            kGAMECLASS.output.addButtonDisabled(3, "Wings", "Your wings can't be dyed!");
+        }
 
-		private  dyeWings(): void
-		{
-			clearOutput();
-			outputText("You rub the dye into your [wings], then use a bucket of cool lakewater to rinse clean a few minutes later.  ");
-			game.player.wings.applyDye(_color);
-			outputText("You now have [wingColor] wings.");
-			finalize();
-		}
+        if (this.game.player.neck.canDye()) {
+            this.outputText("\n\nYou have a [neckColor] neck.");
+            if (!this.game.player.neck.hasDyeColor(this._color)) kGAMECLASS.output.addButton(5, "Neck", this.dyeNeck);
+            else kGAMECLASS.output.addButtonDisabled(5, "Neck", "Your already have a " + this._color + " neck!");
+        } else {
+            this.outputText("\n\nYour neck can't be dyed.");
+            kGAMECLASS.output.addButtonDisabled(5, "Neck", "Your neck can't be dyed!");
+        }
 
-		private  dyeNeck(): void
-		{
-			clearOutput();
-			outputText("You rub the dye onto your [neck], then use a bucket of cool lakewater to rinse clean a few minutes later.  ");
-			game.player.neck.applyDye(_color);
-			outputText("You now have a [neckColor] neck.");
-			finalize();
-		}
+        if (this.game.player.rearBody.canDye()) {
+            this.outputText("\n\nYou have a [rearBodyColor] rear body.");
+            if (!this.game.player.rearBody.hasDyeColor(this._color)) kGAMECLASS.output.addButton(6, "Rear Body", this.dyeRearBody);
+            else kGAMECLASS.output.addButtonDisabled(6, "Rear Body", "Your already have a " + this._color + " rear body!");
+        } else {
+            this.outputText("\n\nYour rear body can't be dyed.");
+            kGAMECLASS.output.addButtonDisabled(6, "Rear Body", "Your rear body can't be dyed!");
+        }
 
-		private  dyeRearBody(): void
-		{
-			clearOutput();
-			outputText("You rub the dye onto your [rearBody], then use a bucket of cool lakewater to rinse clean a few minutes later.  ");
-			game.player.rearBody.applyDye(_color);
-			outputText("You now have a [rearBodyColor] rear body.");
-			finalize();
-		}
+        kGAMECLASS.output.addButton(4, "Nevermind", this.dyeCancel);
+        return true;
+    }
 
-		private  dyeCancel(): void {
-			clearOutput();
-			outputText("You put the dye away.\n\n");
-			game.inventory.returnItemToInventory(this);
-		}
+    private dyeHair(): void {
+        this.clearOutput();
+        if (this.game.player.hair.length == 0) {
+            this.outputText("You rub the dye into your bald head, but it has no effect.");
+        }
+        else if (this.game.player.hair.color.indexOf("rubbery") != -1 || this.game.player.hair.color.indexOf("latex-textured") != -1) {
+            this.outputText("You massage the dye into your " + this.game.player.hairDescript() + " but the dye cannot penetrate the impermeable material your hair is composed of.");
+        }
+        else {
+            this.outputText("You rub the dye into your " + this.game.player.hairDescript() + ", then use a bucket of cool lakewater to rinse clean a few minutes later.  ");
+            this.game.player.hair.color = this._color;
+            this.outputText("You now have " + this.game.player.hairDescript() + ".");
+            if (this.game.player.lust100 > 50) {
+                this.outputText("\n\nThe cool water calms your urges somewhat, letting you think more clearly.");
+                this.game.dynStats("lus", -15);
+            }
+        }
+        this.game.inventory.itemGoNext();
+    }
 
-		private  finalize(): void
-		{
-			if (game.player.lust100 > 50) {
-				outputText("\n\nThe cool water calms your urges somewhat, letting you think more clearly.");
-				game.dynStats("lus", -15);
-			}
-			game.inventory.itemGoNext();
-		}
-	}
+    private dyeFur(): void {
+        this.clearOutput();
+        this.outputText("You rub the dye into your fur, then use a bucket of cool lakewater to rinse clean a few minutes later.  ");
+        this.game.player.skin.furColor = this._color;
+        this.outputText("You now have " + this.game.player.skin.furColor + " fur.");
+        this.finalize();
+    }
 
+    private dyeUnderBodyFur(): void {
+        this.clearOutput();
+        this.outputText("You rub the dye into your fur on your underside, then use a bucket of cool lakewater to rinse clean a few minutes later.  ");
+        this.game.player.underBody.skin.furColor = this._color;
+        this.outputText("You now have " + this.game.player.underBody.skin.furColor + " fur on your underside.");
+        this.finalize();
+    }
+
+    private dyeFeathers(): void {
+        this.clearOutput();
+        this.outputText("You rub the dye into your feathers, then use a bucket of cool lakewater to rinse clean a few minutes later.  ");
+        this.game.player.skin.furColor = this._color;
+        this.outputText("You now have " + this.game.player.skin.furColor + " feathers.");
+        this.finalize();
+    }
+
+    private dyeUnderBodyFeathers(): void {
+        this.clearOutput();
+        this.outputText("You rub the dye into your feathers on your underside, then use a bucket of cool lakewater to rinse clean a few minutes later.  ");
+        this.game.player.underBody.skin.furColor = this._color;
+        this.outputText("You now have " + this.game.player.underBody.skin.furColor + " feathers on your underside.");
+        this.finalize();
+    }
+
+    private dyeWings(): void {
+        this.clearOutput();
+        this.outputText("You rub the dye into your [wings], then use a bucket of cool lakewater to rinse clean a few minutes later.  ");
+        this.game.player.wings.applyDye(this._color);
+        this.outputText("You now have [wingColor] wings.");
+        this.finalize();
+    }
+
+    private dyeNeck(): void {
+        this.clearOutput();
+        this.outputText("You rub the dye onto your [neck], then use a bucket of cool lakewater to rinse clean a few minutes later.  ");
+        this.game.player.neck.applyDye(this._color);
+        this.outputText("You now have a [neckColor] neck.");
+        this.finalize();
+    }
+
+    private dyeRearBody(): void {
+        this.clearOutput();
+        this.outputText("You rub the dye onto your [rearBody], then use a bucket of cool lakewater to rinse clean a few minutes later.  ");
+        this.game.player.rearBody.applyDye(this._color);
+        this.outputText("You now have a [rearBodyColor] rear body.");
+        this.finalize();
+    }
+
+    private dyeCancel(): void {
+        this.clearOutput();
+        this.outputText("You put the dye away.\n\n");
+        this.game.inventory.returnItemToInventory(this);
+    }
+
+    private finalize(): void {
+        if (this.game.player.lust100 > 50) {
+            this.outputText("\n\nThe cool water calms your urges somewhat, letting you think more clearly.");
+            this.game.dynStats("lus", -15);
+        }
+        this.game.inventory.itemGoNext();
+    }
+}
