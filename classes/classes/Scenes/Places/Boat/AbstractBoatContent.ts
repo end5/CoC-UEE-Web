@@ -1,14 +1,14 @@
+import { BaseContent } from "../../../BaseContent";
+import { Boat } from "../Boat";
+import { kGAMECLASS } from "../../../GlobalFlags/kGAMECLASS";
+
 /**
  * Created by aimozg on 06.01.14.
  */
 
-	export class AbstractBoatContent extends BaseContent
-	{
-		protected  get boat():Boat {
-			return kGAMECLASS.boat;
-		}
-		public  AbstractBoatContent()
-		{
-		}
-	}
+export class AbstractBoatContent extends BaseContent {
+    protected get boat(): Boat {
+        return kGAMECLASS.boat;
+    }
 
+}

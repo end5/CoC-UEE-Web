@@ -1,14 +1,9 @@
-	/**
-	 * ...
-	 * @author ...
-	 */
-	export class Whitney extends Monster
-	{
-		
-		public  Whitney() 
-		{
-			
-		}
-		
-	}
+import { Monster } from "../../../Monster";
 
+/**
+ * ...
+ * @author ...
+ */
+export class Whitney extends Monster {
+
+}
